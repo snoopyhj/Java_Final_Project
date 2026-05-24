@@ -21,7 +21,7 @@ The goal of the game is to complete projects successfully while keeping the comp
 - Project status enum
 - Turn-based game loop
 - Console menu interaction
-- Web UI version
+- Web UI version (run WebMain.java)
 - Employee assignment and removal
 - Salary payment system
 - Project reward system
