@@ -31,7 +31,17 @@ The goal of the game is to complete projects successfully while keeping the comp
 
 ## How to Run
 
+# Console version
 ```bash
 cd techcorp-game
 mvn compile
 java -cp target/classes com.example.techcorp.Main
+```
+
+# Web UI version
+```bash
+cd techcorp-game
+mvn compile
+java -cp target/classes com.example.techcorp.WebMain
+```
+
