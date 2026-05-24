@@ -2,8 +2,10 @@ package com.example.techcorp.engine;
 
 import com.example.techcorp.domain.Company;
 import com.example.techcorp.domain.Project;
+import com.example.techcorp.domain.ProjectType;
 import com.example.techcorp.domain.Employee;
 import com.example.techcorp.ui.ConsoleUI;
+import com.example.techcorp.domain.ProjectStatus;
 
 public class GameEngine {
 
@@ -30,28 +32,44 @@ public void start() {
         int choice = ui.getChoice();
         handleChoice(choice);
 
+        if (company.isBankrupt()) {
+        ui.showMessage("Company is bankrupt! Game over.");
+        running = false;
+        }
+
         if (running) {
             turn++;
         }
     }
 }
-
 private void handleChoice(int choice) {
     switch (choice) {
         case 1:
-            project.start();
-            ui.showMessage("Project started.");
-            break;
+    if (project.start()) {
+        ui.showMessage("Project started.");
+    } else {
+        ui.showMessage("Only planned projects can be started.");
+    }
+    break;
 
         case 2:
             assignEmployee();
             break;
 
         case 3:
-            project.workOneTurn();
+            removeEmployee();
             break;
 
         case 4:
+            workOnProject();
+            break;
+
+        case 5:
+            project = createProjectFromChoice();
+            ui.showMessage("New project selected: " + project.getName());
+            break;
+
+        case 6:
             running = false;
             ui.showMessage("Game ended.");
             break;
@@ -59,10 +77,36 @@ private void handleChoice(int choice) {
         default:
             ui.showMessage("Invalid choice.");
     }
+}
+
+private void workOnProject() {
+    if (project.getStatus() != ProjectStatus.IN_PROGRESS) {
+        ui.showMessage("Project must be started before work.");
+        return;
+    }
+
+    if (project.getEmployees().isEmpty()) {
+        ui.showMessage("Assign at least one employee before work.");
+        return;
+    }
+
+    if (!company.paySalariesFor(project.getEmployees())) {
+        ui.showMessage("Work cancelled because salaries could not be paid.");
+        return;
+    }
+
+    try {
+        project.workOneTurn();
+        ui.showMessage("Project progressed.");
+    } catch (RuntimeException e) {
+        ui.showMessage(e.getMessage());
+        return;
+    }
 
     if (project.isFinished()) {
-        ui.showMessage("Project finished! You win!");
-        running = false;
+        company.addCash(project.getReward());
+        ui.showMessage("Project finished! Earned: " + project.getReward());
+        ui.showMessage("Choose option 5 to select a new project.");
     }
 }
 
@@ -80,4 +124,83 @@ private void handleChoice(int choice) {
 
         ui.showMessage(e.getName() + " assigned to " + project.getName());
     }
+
+private Project createProjectFromChoice() {
+    int choice = ui.chooseProjectType();
+
+    Project newProject;
+
+    switch (choice) {
+        case 1:
+            newProject = new Project(
+                "Mobile Banking App",
+                40,
+                ProjectType.MOBILE_APP
+            );
+            break;
+
+        case 2:
+            newProject = new Project(
+                "E-commerce Website",
+                35,
+                ProjectType.WEB_APP
+            );
+            break;
+
+        case 3:
+            newProject = new Project(
+                "AI Chatbot",
+                60,
+                ProjectType.AI_SYSTEM
+            );
+            break;
+
+        case 4:
+            newProject = new Project(
+                "Indie Game",
+                50,
+                ProjectType.GAME_DEV
+            );
+            break;
+
+        default:
+            ui.showMessage("Invalid choice. Default selected.");
+
+            newProject = new Project(
+                "Simple Website",
+                20,
+                ProjectType.WEB_APP
+            );
+    }
+
+    company.addProject(newProject);
+
+    return newProject;
+}
+
+    private void removeEmployee() {
+
+    if (project.getEmployees().isEmpty()) {
+        ui.showMessage("No employees assigned.");
+        return;
+    }
+
+    ui.showEmployees(project.getEmployees());
+
+    int index = ui.getChoice();
+
+    if (index < 0 || index >= project.getEmployees().size()) {
+        ui.showMessage("Invalid employee.");
+        return;
+    }
+
+    Employee employee = project.getEmployees().get(index);
+
+    project.removeEmployee(employee);
+
+    ui.showMessage(
+        employee.getName() + " removed from project."
+    );
+}
+
 }

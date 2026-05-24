@@ -3,14 +3,18 @@ package com.example.techcorp.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.techcorp.exception.ProjectAlreadyFinishedException;
+
 public class Project {
     private String name;
     private int progress;
     private int requiredWork;
     private ProjectStatus status;
     private List<Employee> employees;
+    private int reward = 20000;
+    private ProjectType type;
 
-public Project(String name, int requiredWork) {
+public Project(String name, int requiredWork, ProjectType type) {
     if (name == null || name.isBlank()) {
         throw new IllegalArgumentException("Project name cannot be empty");
     }
@@ -23,8 +27,26 @@ public Project(String name, int requiredWork) {
     this.progress = 0;
     this.status = ProjectStatus.PLANNED;
     this.employees = new ArrayList<>();
-}
+    this.type = type;
 
+
+        switch (type) {
+        case MOBILE_APP:
+            reward = 20000;
+            break;
+        case WEB_APP:
+            reward = 15000;
+            break;
+        case AI_SYSTEM:
+            reward = 40000;
+            break;
+        case GAME_DEV:
+            reward = 30000;
+            break;
+    }
+}
+    
+    
     public void addEmployee(Employee employee) {
     if (employee == null) {
         return;
@@ -37,20 +59,29 @@ public Project(String name, int requiredWork) {
     employees.add(employee);
 }
 
-public int getRequiredWork() {
-    return requiredWork;
-}
+    public int getRequiredWork() {
+        return requiredWork;
+    }
 
-    public void start() {
+    public boolean start() {
         if (status == ProjectStatus.PLANNED) {
             status = ProjectStatus.IN_PROGRESS;
-        }
+            return true;
+    }
+
+        return false;
     }
 
 public void workOneTurn() {
     if (status != ProjectStatus.IN_PROGRESS) {
         System.out.println("Project is not in progress.");
         return;
+    }
+
+    if (isFinished()) {
+        throw new ProjectAlreadyFinishedException(
+            "Project is already finished!"
+        );
     }
 
     if (employees.isEmpty()) {
@@ -72,6 +103,7 @@ public void workOneTurn() {
     }
 }
 
+
     public boolean isFinished() {
         return progress >= requiredWork;
     }
@@ -91,4 +123,17 @@ public void workOneTurn() {
     public List<Employee> getEmployees() {
         return employees;
     }
+
+    public int getReward() {
+    return reward;
+    }
+
+    public ProjectType getType() {
+    return type;
+}
+
+public void removeEmployee(Employee employee) {
+    employees.remove(employee);
+}
+
 }

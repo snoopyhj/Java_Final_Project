@@ -24,29 +24,41 @@ public class ConsoleUI {
         + " | Progress: " + project.getProgress()
         + "/" + project.getRequiredWork()
     );
-    System.out.println("Assigned employees: " + project.getEmployees().size());
+System.out.print("Assigned employees: ");
+
+if (project.getEmployees().isEmpty()) {
+    System.out.println("None");
+} else {
+
+    for (Employee e : project.getEmployees()) {
+        System.out.print(e.getName() + " ");
+    }
+
+    System.out.println();
+}}
+
+public int getChoice() {
+    System.out.print("Choose: ");
+
+    if (scanner.hasNextInt()) {
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+        return choice;
+    } else {
+        scanner.nextLine();
+        return -1;
+    }
 }
 
 public void showMainMenu() {
     System.out.println("\nChoose an action:");
     System.out.println("1. Start project");
     System.out.println("2. Assign employee to project");
-    System.out.println("3. Work on project");
-    System.out.println("4. Exit game");
+    System.out.println("3. Remove employee from project");
+    System.out.println("4. Work on project");
+    System.out.println("5. Choose New Project");
+    System.out.println("6. Exit game");
 }
-
-    public int getChoice() {
-        System.out.print("Choose: ");
-
-        if (scanner.hasNextInt()) {
-            int choice = scanner.nextInt();
-            scanner.nextLine();
-            return choice;
-        } else {
-            scanner.nextLine();
-            return -1;
-        }
-    }
 
     public void showMessage(String msg) {
         System.out.println(msg);
@@ -71,4 +83,14 @@ public void showMainMenu() {
         System.out.println(i + ": " + p.getName() + " (" + p.getStatus() + ")");
     }
     }
+
+public int chooseProjectType() {
+    System.out.println("\nChoose project type:");
+    System.out.println("1. Mobile App");
+    System.out.println("2. Web App");
+    System.out.println("3. AI System");
+    System.out.println("4. Game Dev");
+
+    return getChoice();
+}
 }

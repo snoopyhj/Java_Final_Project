@@ -24,6 +24,10 @@ public abstract class Employee {
 
     public abstract int work();
 
+    public double getEfficiency() {
+    return (double) skill / salary;
+}
+
     public String getName() {
         return name;
     }

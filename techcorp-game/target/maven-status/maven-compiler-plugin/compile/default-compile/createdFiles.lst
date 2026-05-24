@@ -1,2 +1,14 @@
+com/example/techcorp/ui/ConsoleUI.class
+com/example/techcorp/engine/GameEngine.class
 com/example/techcorp/domain/Project.class
 com/example/techcorp/domain/Company.class
+com/example/techcorp/domain/ProjectStatus.class
+com/example/techcorp/domain/Manager.class
+com/example/techcorp/domain/Employee.class
+com/example/techcorp/domain/Developer.class
+com/example/techcorp/domain/Tester.class
+com/example/techcorp/WebMain.class
+com/example/techcorp/domain/Project$1.class
+com/example/techcorp/domain/ProjectType.class
+com/example/techcorp/Main.class
+com/example/techcorp/exception/ProjectAlreadyFinishedException.class
